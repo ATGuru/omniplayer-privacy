@@ -65,7 +65,7 @@
   <p>The manifest declares a package query for <code>android.intent.action.PROCESS_TEXT</code> on plain text. That entry comes from the Flutter project template. OmniPlayer does not read text from other apps.</p>
 
   <h2>8. Android backup</h2>
-  <p><code>android:allowBackup</code> is true. There is no backup rule that excludes the library. If backup is turned on for this phone, Android can include OmniPlayer's private files in the Google account backup for the device. That can include the library database, <code>omniplayer.db</code>, and songs saved from Free Music into the app's private folder. AllTechGuru does not receive that backup. Songs that were already on the phone, outside the app's private folder, are not part of it. You can turn backup off for OmniPlayer in the phone's backup settings.</p>
+  <p><code>android:allowBackup</code> is false. OmniPlayer's private files are left out of Google backup and out of Android device transfer. That includes the library database, <code>omniplayer.db</code>, and songs saved from Free Music into the app's private folder. Uninstalling the app deletes those files. Songs that were already on the phone, outside the app's private folder, stay on the phone.</p>
 
   <h2>9. Third-party libraries</h2>
   <p>The Android app uses these libraries:</p>
