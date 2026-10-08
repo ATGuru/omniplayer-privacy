@@ -10,14 +10,15 @@
     h2 { color: #16324f; margin-top: 32px; }
     a { color: #0a7c8a; }
     .updated { color: #66707a; font-size: 0.9em; }
+    code { font-family: ui-monospace, monospace; font-size: 0.92em; }
   </style>
 </head>
 <body>
   <h1>OmniPlayer Privacy Policy</h1>
-  <p class="updated">Last updated: October 6, 2026</p>
+  <p class="updated">Last updated: October 7, 2026</p>
 
   <h2>1. Who we are</h2>
-  <p>OmniPlayer is a free music player for Android. Guru Morgan made it. AllTechGuru is the company behind it. The app has no account, no ads, and no paywall. This policy explains what the app does with information on your device. There is a longer introduction on the <a href="https://atguru.github.io/omniplayer-privacy/about.html">About page</a>.</p>
+  <p>OmniPlayer is a free music player for Android. Guru Morgan made it. AllTechGuru is the company behind it. The developer name is Guru Morgan. The app has no account, no ads, and no paywall. This policy explains what the app does with information on your device. There is a longer introduction on the <a href="https://atguru.github.io/omniplayer-privacy/about.html">About page</a>.</p>
 
   <h2>2. Information stored on your device</h2>
   <p>OmniPlayer keeps your library on the phone. We do not run a server that receives your songs, playlists, or listening history.</p>
@@ -28,34 +29,69 @@
     <li>Favorites, play counts, playlists, albums you create, and the last playback position.</li>
     <li>The license name of a song saved from Free Music, so the player can show that credit.</li>
   </ul>
+  <p>The library database file is <code>omniplayer.db</code>, in the app's private storage.</p>
 
   <h2>3. Music already on your phone</h2>
-  <p>Scan Device asks Android for permission to read music on the phone. That permission is used to list songs you already have. Those files stay where they are. If you remove one of those songs from the OmniPlayer library, the file remains on the device and a later scan does not add it back.</p>
+  <p>Scan Device asks Android for permission to read music on the phone. The permission names are in section 7. That permission is used to list songs you already have. Those files stay where they are. If you remove one of those songs from the OmniPlayer library, the file remains on the device and a later scan does not add it back.</p>
 
   <h2>4. Free Music</h2>
   <p>Free Music searches the Internet Archive netlabel collection for recordings that carry a Creative Commons or public-domain license. When you search, filter, open a release, preview a song, or download one, the app contacts archive.org from your device.</p>
-  <p>That request includes the search words and filters you chose, and the usual connection information a website receives, such as an IP address. OmniPlayer does not attach your name, email, or an account. Internet Archive's own privacy policy applies to that request: <a href="https://archive.org/about/terms.php">archive.org/about/terms.php</a>.</p>
+  <p>That request includes the search words and filters you chose, and the usual connection information a website receives, such as an IP address. Search and download requests also send this user agent: <code>OmniPlayer/1.0 (netlabel catalog)</code>. Preview plays the same HTTPS address through the audio player and does not add that header. OmniPlayer does not attach your name, email, or an account. Internet Archive's own privacy policy applies to that request: <a href="https://archive.org/about/terms.php">archive.org/about/terms.php</a>.</p>
+  <p>Every archive.org address OmniPlayer uses is HTTPS. That covers search, release details, preview, and download. The app does not allow cleartext traffic.</p>
   <p>Preview plays a song over the internet and does not save a file. A file is saved only when you tap download. Saved files stay in the app's private storage on the phone.</p>
 
   <h2>5. Create New Song</h2>
-  <p>Create New Song opens <a href="https://lyricsintosong.com">lyricsintosong.com</a> in your browser. OmniPlayer does not receive what you type on that site, and it does not take a payment there. That site has its own privacy policy: <a href="https://lyricsintosong.com/privacy">lyricsintosong.com/privacy</a>.</p>
+  <p>Create New Song opens <a href="https://lyricsintosong.com">https://lyricsintosong.com</a> in your browser. The address is only that URL. It has no query string. OmniPlayer does not add a song title, lyrics, library data, search terms, or a device identifier to the link. It does not receive what you type on that site, and it does not take a payment there. That site has its own privacy policy: <a href="https://lyricsintosong.com/privacy">lyricsintosong.com/privacy</a>.</p>
+  <p>The About screen opens atguru.xyz, the music pages, this policy, and the contact email in the browser the same way. Those addresses are HTTPS, or a <code>mailto</code> link for the email.</p>
 
   <h2>6. What we do not collect</h2>
+  <p>We collect nothing ourselves. Free Music requests go directly from your device to archive.org. A search shares the words and filters you chose, and your IP address, with Internet Archive. Section 4 describes that request. OmniPlayer does not receive a copy.</p>
   <p>OmniPlayer does not ask you to create an account. It does not collect your email, contacts, photos, precise location, or advertising ID. It does not include ads, analytics, or a crash-reporting service. We do not sell personal information.</p>
 
-  <h2>7. Notifications</h2>
-  <p>The playback notification lets a song keep playing when the screen is off, and lets you pause or skip from the notification or a headset. You can turn notifications off in Android settings.</p>
+  <h2>7. Permissions</h2>
+  <p>The release manifest requests these permissions:</p>
+  <ul>
+    <li><code>android.permission.INTERNET</code> — Free Music search, preview, and download.</li>
+    <li><code>android.permission.ACCESS_NETWORK_STATE</code> — added by AndroidX Media3, the playback engine inside just_audio, so playback can tell whether a network is available. It is not used for advertising or analytics.</li>
+    <li><code>android.permission.READ_EXTERNAL_STORAGE</code> — read music already on the phone. Limited to Android 12 and earlier (<code>maxSdkVersion</code> 32).</li>
+    <li><code>android.permission.READ_MEDIA_AUDIO</code> — read music already on the phone on Android 13 and later.</li>
+    <li><code>android.permission.FOREGROUND_SERVICE</code> and <code>android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK</code> — keep a song playing when the screen is off. The service <code>com.ryanheise.audioservice.AudioServiceBackgroundTask</code> uses the foreground service type <code>mediaPlayback</code>.</li>
+    <li><code>android.permission.WAKE_LOCK</code> — keep playback from stopping when the phone sleeps.</li>
+    <li><code>android.permission.POST_NOTIFICATIONS</code> — show the playback notification, where you can pause or skip. You can turn notifications off in Android settings.</li>
+    <li><code>android.permission.BLUETOOTH</code> — headset buttons on Android 11 and earlier (<code>maxSdkVersion</code> 30).</li>
+    <li><code>android.permission.BLUETOOTH_CONNECT</code> — headset and media-button controls on newer Android versions.</li>
+  </ul>
+  <p>The manifest also defines a signature permission, <code>com.atguru.omniplayer.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION</code>. AndroidX uses it inside the app. You are not asked to grant it, and other apps cannot hold it.</p>
+  <p>The manifest declares a package query for <code>android.intent.action.PROCESS_TEXT</code> on plain text. That entry comes from the Flutter project template. OmniPlayer does not read text from other apps.</p>
 
-  <h2>8. Children</h2>
-  <p>OmniPlayer is not directed at children under 13. We do not knowingly collect personal information from children under 13.</p>
+  <h2>8. Android backup</h2>
+  <p><code>android:allowBackup</code> is true. There is no backup rule that excludes the library. If backup is turned on for this phone, Android can include OmniPlayer's private files in the Google account backup for the device. That can include the library database, <code>omniplayer.db</code>, and songs saved from Free Music into the app's private folder. AllTechGuru does not receive that backup. Songs that were already on the phone, outside the app's private folder, are not part of it. You can turn backup off for OmniPlayer in the phone's backup settings.</p>
 
-  <h2>9. Deleting information</h2>
+  <h2>9. Third-party libraries</h2>
+  <p>The Android app uses these libraries:</p>
+  <ul>
+    <li>just_audio — plays audio, through AndroidX Media3.</li>
+    <li>audio_service — the playback notification and the mediaPlayback foreground service.</li>
+    <li>audio_session — shares the speaker with other apps.</li>
+    <li>on_audio_query — lists music files when a scan is allowed.</li>
+    <li>drift and sqlite3_flutter_libs — the on-device library database.</li>
+    <li>permission_handler — requests the permissions in section 7.</li>
+    <li>url_launcher — opens lyricsintosong.com, atguru.xyz, and this policy in the browser. The library also contains an in-app web view. OmniPlayer does not use that web view.</li>
+    <li>path_provider — finds the app's private storage folder.</li>
+  </ul>
+  <p>These libraries are not advertising or analytics services. The release manifest does not include Firebase, Google Play Services ads, Google Analytics, Crashlytics, or a similar kit. The project file also names google_fonts. The app never calls it and does not download fonts. The typefaces are files shipped inside the app.</p>
+
+  <h2>10. Children</h2>
+  <p>OmniPlayer is not directed at children under 13. We do not knowingly collect personal information from children under 13. The Google Play listing is not made for children.</p>
+
+  <h2>11. Deleting information</h2>
   <p>You can delete a song from the library inside the app. Deleting a song the app downloaded also removes that file from the phone. Uninstalling OmniPlayer deletes the app's library database and the songs it saved in its private storage. Songs that were already on the phone before you used OmniPlayer stay on the phone.</p>
+  <p>To ask us to delete information we hold, email <a href="mailto:guru_morgan@atguru.xyz">guru_morgan@atguru.xyz</a> and say you want it deleted. We do not keep an account or a copy of your library. If you have written to that address, the message itself is what we can delete.</p>
 
-  <h2>10. Changes</h2>
+  <h2>12. Changes</h2>
   <p>If this policy changes, the date at the top of this page will change.</p>
 
-  <h2>11. Contact</h2>
-  <p>Questions about this policy can be sent to <a href="mailto:guru_morgan@atguru.xyz">guru_morgan@atguru.xyz</a>.</p>
+  <h2>13. Contact</h2>
+  <p>Guru Morgan, AllTechGuru. Questions about this policy, and deletion requests, can be sent to <a href="mailto:guru_morgan@atguru.xyz">guru_morgan@atguru.xyz</a>.</p>
 </body>
 </html>
